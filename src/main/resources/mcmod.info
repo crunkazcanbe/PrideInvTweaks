@@ -1,0 +1,11 @@
+[
+  {
+    "modid": "dpinvtweaks",
+    "name": "Pride InvTweaks",
+    "description": "Hides missing-texture items everywhere (inventory + HEI/JEI) and centers items in inventory slots.",
+    "version": "1.0.0",
+    "mcversion": "1.12.2",
+    "authorList": ["DogPound"],
+    "clientSideOnly": true
+  }
+]

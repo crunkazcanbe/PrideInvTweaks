@@ -1,0 +1,56 @@
+/**
+ * Pride InvTweaks — RetroFuturaGradle (CleanroomMC / 1.12.2, Mixin via MixinBooter).
+ * Hides missing-texture items everywhere (inventory, HEI/JEI) and centers items in slots.
+ */
+plugins {
+    id 'java'
+    id 'com.gtnewhorizons.retrofuturagradle' version '2.0.2'
+}
+
+version = '1.7.0'
+group = 'com.dogpound.invtweaks'
+base { archivesName.set('PrideInvTweaks-1.12.2') }
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        vendor.set(JvmVendorSpec.AZUL)
+    }
+}
+
+minecraft {
+    mcVersion.set('1.12.2')
+    mcpMappingChannel.set('stable')
+    mcpMappingVersion.set('39')
+    extraRunJvmArguments.addAll(['-Dmixin.hotSwap=true', '-Dmixin.debug.export=true'])
+}
+
+repositories {
+    mavenCentral()
+    maven { name 'CleanroomMC Maven'; url 'https://maven.cleanroommc.com' }
+    maven { name 'GTNH Maven'; url 'https://nexus.gtnewhorizons.com/repository/public/' }
+}
+
+dependencies {
+    String mixin = modUtils.enableMixins('zone.rong:mixinbooter:10.2', 'mixins.dpinvtweaks.refmap.json')
+    api(mixin) { transitive = false }
+    annotationProcessor 'org.ow2.asm:asm-debug-all:5.2'
+    annotationProcessor 'com.google.guava:guava:32.1.2-jre'
+    annotationProcessor 'com.google.code.gson:gson:2.8.9'
+    annotationProcessor(mixin) { transitive = false }
+    // CE on the compile classpath only, so the Mixin AP can resolve com.hbm.render.item.ItemRenderBase
+    // (the dev jar is already deobf/MCP-named). Not shipped — provided at runtime by the pack's CE.
+    compileOnly files("/home/user/mc-mods/ce-latest/Hbm-s-Nuclear-Tech-CE/NTM-CE-1.12.2-2.5.0.4-dev.jar")
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title'   : 'PrideInvTweaks',
+            'Specification-Version' : '1',
+            'Implementation-Title'  : project.name,
+            'Implementation-Version': "${version}",
+            'MixinConfigs'          : 'mixins.dpinvtweaks.json'
+        ])
+    }
+}
